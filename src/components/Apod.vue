@@ -1,23 +1,19 @@
 <template>
-  <v-container>
-    <v-layout>
-      <apod></apod>
-    </v-layout>
-  </v-container>
+  <v-flex xs12>
+    <v-img src="https://apod.nasa.gov/apod/image/1905/SunriseCopernicusC.jpg" />
+  </v-flex>
 </template>
 
 <script>
-import Apod from '@/components/Apod'
 
 export default {
-  name: 'Home',
+  name: 'Apod',
   components: {
-    Apod
   },
   props: {
   },
   mounted () {
-    console.log('[Home:mounted]')
+    console.log('[Apod:mounted]')
   },
   data () {
     return {
