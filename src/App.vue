@@ -1,5 +1,5 @@
 <template>
-  <v-app id="app">
+  <v-app dark id="app">
     <router-view/>
   </v-app>
 </template>
@@ -7,7 +7,10 @@
 <script>
 
 export default {
-  name: 'app'
+  name: 'app',
+  mounted () {
+    document.querySelector('body').style.backgroundColor = '#303030'
+  }
 }
 </script>
 

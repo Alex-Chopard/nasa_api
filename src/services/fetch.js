@@ -38,7 +38,10 @@ function call (endpoint, params = {}) {
 
     if (options.method !== 'POST') {
       if (Object.keys(params).length > 0) {
-        url += `?${Object.keys(params).map(key => { return `&${key}=${params[key]}` })}`
+        url += '?'
+        Object.keys(params).map(key => {
+          url += `&${key}=${params[key]}`
+        })
       }
     } else {
       body = params
