@@ -1,2 +1,2 @@
-// example.js
-export const SET_EXAMPLE_TEXT = 'example/SET_EXAMPLE_TEXT'
+// toolbar.js
+export const SET_TOOLBAR_TITLE = 'toolbar/SET_TOOLBAR_TITLE'

@@ -72,6 +72,7 @@
 
 <script>
 import moment from 'moment'
+import { mapActions } from 'vuex'
 import fetch from '@/services/fetch'
 import endpoints from '@/services/endpoints'
 
@@ -83,6 +84,7 @@ export default {
   },
   mounted () {
     console.log('[Apod:mounted]')
+    this.setToolbarTitle('Astronomy Picture of the Day')
     this.fetchApod()
   },
   data () {
@@ -126,7 +128,10 @@ export default {
     },
     formatDate (date) {
       return moment(date, 'YYYY-MM-DD').format('LL')
-    }
+    },
+    ...mapActions({
+      setToolbarTitle: 'setTitle'
+    })
   },
   computed: {
     url () {
