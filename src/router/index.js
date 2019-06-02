@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import OtherPage from '@/components/OtherPage'
+import Apod from '@/components/Apod'
+import Asteroid from '@/components/Asteroid'
 
 Vue.use(Router)
 
@@ -13,9 +14,14 @@ export default new Router({
       component: Home
     },
     {
-      name: 'OtherPage',
-      path: '/page',
-      component: OtherPage
+      path: '/apod',
+      name: 'Apod',
+      component: Apod
+    },
+    {
+      path: '/asteroid',
+      name: 'Asteroid',
+      component: Asteroid
     }
   ]
 })
