@@ -12,6 +12,11 @@
           <template v-slot:items="props">
             <td>{{ props.item.name }}</td>
             <td class="text-xs-right">{{ props.item.designation }}</td>
+            <td class="text-xs-right">{{ getCloseApprochDate(props.item.close_approach_data) }}</td>
+            <td class="text-xs-right">{{ props.item.estimated_diameter.meters.estimated_diameter_max }}</td>
+            <td class="text-xs-right">{{ props.item.estimated_diameter.meters.estimated_diameter_min }}</td>
+            <td class="text-xs-right">{{ getDate(props.item.orbital_data.first_observation_date) }}</td>
+            <td class="text-xs-right">{{ getDate(props.item.orbital_data.last_observation_date) }}</td>
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
@@ -22,6 +27,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapActions } from 'vuex'
 import fetch from '@/services/fetch'
 import endpoints from '@/services/endpoints'
@@ -46,8 +52,13 @@ export default {
       },
       dataTable: {
         headers: [
-          { text: 'Asteroid', align: 'left', value: 'name' },
-          { text: 'Designation', align: 'right', value: 'designation' }
+          { text: 'Asteroid Name', align: 'left', value: 'name' },
+          { text: 'Designation', align: 'right', value: 'designation' },
+          { text: 'Close Approach Date', align: 'right', value: 'close_approach_data' },
+          { text: 'Estimated Diameter Max (meters)', align: 'right', value: 'estimated_diameter.meters.estimated_diameter_max' },
+          { text: 'Estimated Diameter Min (meters)', align: 'right', value: 'estimated_diameter.meters.estimated_diameter_min' },
+          { text: 'First Observation Date', align: 'right', value: 'orbital_data.first_observation_date' },
+          { text: 'Last Observation Date', align: 'right', value: 'orbital_data.last_observation_date' }
         ],
         nearEarthObjects: []
       },
@@ -56,9 +67,9 @@ export default {
   },
   watch: {
     async 'pagination.page' () {
-      if (this.pagination.page > this.pagination.currentLoaded - 10) {
+      if (this.pagination.page === this.pagination.currentLoaded || this.pagination.currentLoaded === 0) {
         this.loading = 'warning'
-        for (var i = 0; i < 50; i++) {
+        for (var i = 0; i < 5; i++) {
           await this.fetchAsteroids(this.pagination.currentLoaded)
         }
         this.loading = false
@@ -75,7 +86,18 @@ export default {
             if (result) {
               this.pagination.totalItems = result.page.total_elements
               this.pagination.currentLoaded++
-              this.dataTable.nearEarthObjects.push(...result.near_earth_objects)
+
+              result.near_earth_objects.map(nearEarthObject => {
+                var closeApprochDate = null
+                if (nearEarthObject.close_approach_data && nearEarthObject.close_approach_data.length > 0) {
+                  let date = nearEarthObject.close_approach_data[0].close_approach_date_full
+                  closeApprochDate = moment(date).format('X')
+                }
+
+                nearEarthObject.close_approach_data = closeApprochDate
+
+                this.dataTable.nearEarthObjects.push(nearEarthObject)
+              })
             }
 
             resolve(true)
@@ -85,6 +107,16 @@ export default {
           resolve(false)
         }
       })
+    },
+    getCloseApprochDate (closeApprochDate) {
+      if (closeApprochDate) {
+        return moment(moment.unix(closeApprochDate)).format('LLL')
+      } else {
+        return '-'
+      }
+    },
+    getDate (date) {
+      return moment(date).format('LL')
     },
     ...mapActions({
       setToolbarTitle: 'setTitle'
