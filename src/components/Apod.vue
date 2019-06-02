@@ -1,7 +1,6 @@
 <template>
   <v-layout class="Apod" row wrap v-if="apod">
     <v-flex xs12>
-      <v-card-text class="Apod-name">Astronomy Picture of the Day</v-card-text>
       <v-card-text class="Apod-title" v-text="apod.title"></v-card-text>
       <v-flex class="Apod-content" xs12>
         <v-img
@@ -145,12 +144,6 @@ export default {
 
 <style scoped lang="scss">
 .Apod {
-  &-name {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
-  }
-
   &-title {
     text-align: center;
     font-size: 1.4rem;
