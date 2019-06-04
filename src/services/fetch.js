@@ -1,22 +1,25 @@
 const baseUrl = 'https://api.nasa.gov/'
+const baseUrlFireball = 'https://ssd-api.jpl.nasa.gov/'
 const apiKey = 'RWp3aV6hfLxPQbat6zIIiMbqpze7hjdixCvnxSZb'
 
-function call (endpoint, params = {}) {
+function call (endpoint, params = {}, api = 'default') {
   return new Promise((resolve, reject) => {
     const options = {
       method: endpoint.method,
-      headers: {
+      headers: api === 'default' ? {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
-      }
+      } : {}
     }
 
     let url = endpoint.url
 
     // Add the api key at the end of the request.
-    params = {
-      ...params,
-      api_key: apiKey
+    if (api === 'default') {
+      params = {
+        ...params,
+        api_key: apiKey
+      }
     }
 
     if (url.includes(':')) {
@@ -33,7 +36,7 @@ function call (endpoint, params = {}) {
       }
     }
 
-    url = baseUrl + url
+    url = (api === 'default' ? baseUrl : baseUrlFireball) + url
     let body = ''
 
     if (options.method !== 'POST') {

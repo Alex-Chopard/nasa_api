@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/components/Home'
 import Apod from '@/components/Apod'
 import Asteroid from '@/components/Asteroid'
+import Fireballs from '@/components/Fireballs'
 
 Vue.use(Router)
 
@@ -22,6 +23,11 @@ export default new Router({
       path: '/asteroid',
       name: 'Asteroid',
       component: Asteroid
+    },
+    {
+      path: '/fireballs',
+      name: 'Fireballs',
+      component: Fireballs
     }
   ]
 })

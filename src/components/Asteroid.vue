@@ -17,6 +17,9 @@
             <td class="text-xs-right">{{ props.item.estimated_diameter.meters.estimated_diameter_min }}</td>
             <td class="text-xs-right">{{ getDate(props.item.orbital_data.first_observation_date) }}</td>
             <td class="text-xs-right">{{ getDate(props.item.orbital_data.last_observation_date) }}</td>
+            <td class="text-xs-right">{{ props.item.orbital_data.perihelion_distance }}</td>
+            <td class="text-xs-right">{{ props.item.orbital_data.aphelion_distance }}</td>
+            <td class="text-xs-right">{{ props.item.orbital_data.observations_used }}</td>
           </template>
         </v-data-table>
         <div class="text-xs-center pt-2">
@@ -58,7 +61,10 @@ export default {
           { text: 'Estimated Diameter Max (meters)', align: 'right', value: 'estimated_diameter.meters.estimated_diameter_max' },
           { text: 'Estimated Diameter Min (meters)', align: 'right', value: 'estimated_diameter.meters.estimated_diameter_min' },
           { text: 'First Observation Date', align: 'right', value: 'orbital_data.first_observation_date' },
-          { text: 'Last Observation Date', align: 'right', value: 'orbital_data.last_observation_date' }
+          { text: 'Last Observation Date', align: 'right', value: 'orbital_data.last_observation_date' },
+          { text: 'Perihelion Distance (AU)', align: 'right', value: 'orbital_data.perihelion_distance' },
+          { text: 'Aphelion Distance (AU)', align: 'right', value: 'orbital_data.aphelion_distance' },
+          { text: 'Observations Used', align: 'right', value: 'orbital_data.observations_used' }
         ],
         nearEarthObjects: []
       },
