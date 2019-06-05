@@ -13,6 +13,8 @@
             <td>{{ props.item.name }}</td>
             <td class="text-xs-right">{{ props.item.designation }}</td>
             <td class="text-xs-right">{{ getCloseApprochDate(props.item.close_approach_data) }}</td>
+            <td class="text-xs-right">{{ getMissDistance(props.item.close_approach_data) }}</td>
+            <td class="text-xs-right">{{ getRelativeVelocity(props.item.close_approach_data) }}</td>
             <td class="text-xs-right">{{ props.item.estimated_diameter.meters.estimated_diameter_max }}</td>
             <td class="text-xs-right">{{ props.item.estimated_diameter.meters.estimated_diameter_min }}</td>
             <td class="text-xs-right">{{ getDate(props.item.orbital_data.first_observation_date) }}</td>
@@ -30,8 +32,8 @@
 </template>
 
 <script>
-import moment from 'moment'
 import { mapActions } from 'vuex'
+import moment from 'moment'
 import fetch from '@/services/fetch'
 import endpoints from '@/services/endpoints'
 
@@ -57,7 +59,9 @@ export default {
         headers: [
           { text: 'Asteroid Name', align: 'left', value: 'name' },
           { text: 'Designation', align: 'right', value: 'designation' },
-          { text: 'Close Approach Date', align: 'right', value: 'close_approach_data' },
+          { text: 'Close Approach Date', align: 'right', value: 'close_approach_data.close_approach_date_full' },
+          { text: 'Miss Distance (Km)', align: 'right', value: 'close_approach_data.miss_distance.kilometers' },
+          { text: 'Relative Velocity (Km/s)', align: 'right', value: 'close_approach_data.relative_velocity.kilometers_per_second ' },
           { text: 'Estimated Diameter Max (meters)', align: 'right', value: 'estimated_diameter.meters.estimated_diameter_max' },
           { text: 'Estimated Diameter Min (meters)', align: 'right', value: 'estimated_diameter.meters.estimated_diameter_min' },
           { text: 'First Observation Date', align: 'right', value: 'orbital_data.first_observation_date' },
@@ -94,13 +98,13 @@ export default {
               this.pagination.currentLoaded++
 
               result.near_earth_objects.map(nearEarthObject => {
-                var closeApprochDate = null
+                var closeApprochData = null
                 if (nearEarthObject.close_approach_data && nearEarthObject.close_approach_data.length > 0) {
-                  let date = nearEarthObject.close_approach_data[0].close_approach_date_full
-                  closeApprochDate = moment(date).format('X')
+                  closeApprochData = nearEarthObject.close_approach_data[0]
+                  closeApprochData.close_approach_date_full = moment(closeApprochData.close_approach_date_full).format('X')
                 }
 
-                nearEarthObject.close_approach_data = closeApprochDate
+                nearEarthObject.close_approach_data = closeApprochData
 
                 this.dataTable.nearEarthObjects.push(nearEarthObject)
               })
@@ -114,9 +118,23 @@ export default {
         }
       })
     },
-    getCloseApprochDate (closeApprochDate) {
-      if (closeApprochDate) {
-        return moment(moment.unix(closeApprochDate)).format('LLL')
+    getCloseApprochDate (closeApprochData) {
+      if (closeApprochData && closeApprochData.close_approach_date_full) {
+        return moment(moment.unix(closeApprochData.close_approach_date_full)).format('LLL')
+      } else {
+        return '-'
+      }
+    },
+    getMissDistance (closeApprochData) {
+      if (closeApprochData && closeApprochData.miss_distance && closeApprochData.miss_distance.kilometers) {
+        return closeApprochData.miss_distance.kilometers
+      } else {
+        return '-'
+      }
+    },
+    getRelativeVelocity (closeApprochData) {
+      if (closeApprochData && closeApprochData.relative_velocity && closeApprochData.relative_velocity.kilometers_per_second) {
+        return closeApprochData.relative_velocity.kilometers_per_second
       } else {
         return '-'
       }
