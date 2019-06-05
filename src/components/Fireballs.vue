@@ -7,13 +7,13 @@
         :zoom="map.zoom"
         map-type-id="terrain"
         style="height: 500px"
-      >
+      > 
         <GmapCircle
           v-for="fireball in fireballs"
-          :key="`key-${fireball.lat}${fireball.lon}${fireball.date}`"
+          :key="`key-circle-${fireball.lat}${fireball.lon}${fireball.date}`"
           :center="{ lat: getLat(fireball), lng: getLng(fireball) }"
           :radius="10"
-          :clickable="false"
+          :clickable="true"
           :draggable="false"
           :options="{
             strokeColor: getColor(fireball['impact-e']),
@@ -22,7 +22,16 @@
             fillColor: getColor(fireball['impact-e']),
             fillOpacity: 1
           }"
+          @click="displayInfoWindow(fireball)"
         />
+
+        <gmap-info-window
+          :options="{ maxWidth: 300 }"
+          :position="map.infoWindow.position"
+          :opened="map.infoWindow.open"
+          @closeclick="map.infoWindow.open=false">
+          <div v-html="map.infoWindow.template"></div>
+        </gmap-info-window>
       </GmapMap>
 
     </v-flex>
@@ -31,6 +40,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import moment from 'moment'
 import fetch from '@/services/fetch'
 import endpoints from '@/services/endpoints'
 
@@ -50,7 +60,12 @@ export default {
     return {
       fireballs: [],
       map: {
-        zoom: 2
+        zoom: 2,
+        infoWindow: {
+          open: false,
+          position: { lat: 0, lng: 0 },
+          template: ''
+        }
       }
     }
   },
@@ -78,6 +93,18 @@ export default {
           console.info('[Fireballs:fetchFireballs] All fireballs : ', this.fireballs)
         }
       })
+    },
+    displayInfoWindow (fireball) {
+      this.map.infoWindow.open = true
+      this.map.infoWindow.position.lat = this.getLat(fireball)
+      this.map.infoWindow.position.lng = this.getLng(fireball)
+      this.map.infoWindow.template =
+        `<p style="color: #303030;">(${fireball.lat}°${fireball['lat-dir']}, ${fireball.lon}°${fireball['lon-dir']})` +
+        `<br/>Energy: ${fireball['impact-e']} kt` +
+        `<br/>${this.formatDate(fireball.date)}</p>`
+    },
+    formatDate (date) {
+      return moment(date).format('LLL')
     },
     getLat (fireball) {
       return fireball['lat-dir'] === 'N' ? parseFloat(fireball.lat) : -parseFloat(fireball.lat)
