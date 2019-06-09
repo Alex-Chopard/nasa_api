@@ -79,7 +79,7 @@ export default {
     async 'pagination.page' () {
       if (this.pagination.page === this.pagination.currentLoaded || this.pagination.currentLoaded === 0) {
         this.loading = 'warning'
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 20; i++) {
           await this.fetchAsteroids(this.pagination.currentLoaded)
         }
         this.loading = false
