@@ -3,6 +3,7 @@ import App from '@/App'
 import router from '@/router'
 import Bootstrap from '@/bootstrap'
 import Vuetify from 'vuetify'
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 import 'vuetify/dist/vuetify.min.css'
 import 'material-components-web/dist/material-components-web.css'
@@ -20,6 +21,13 @@ Vue.use(Vuetify, {
 
 Vue.config.productionTip = false
 Vue.use(Bootstrap)
+
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyBOxxfUKS143DC-eGVpHtdQPR3n-7mytWE',
+    libraries: 'places'
+  }
+})
 
 /* eslint-disable no-new */
 new Vue({

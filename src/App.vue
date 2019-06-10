@@ -6,6 +6,7 @@
       <v-toolbar-items>
         <v-btn @click="goTo('/apod')" flat>Apod</v-btn>
         <v-btn @click="goTo('/asteroid')" flat>Asteroid</v-btn>
+        <v-btn @click="goTo('/fireballs')" flat>Fireballs</v-btn>
       </v-toolbar-items>
     </v-toolbar>
 
